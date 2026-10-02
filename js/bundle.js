@@ -217,37 +217,31 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Reset seal state (in case it's stale from a previous open)
-    gsap.set(waxSeal, { opacity: 1, scale: 1.0, rotation: 0 });
+    // Reset seal (prevent stale state from previous run)
+    gsap.set(waxSeal, { opacity: 1, scale: 1.0, rotation: 0, clearProps: 'transform' });
 
-    // 1. Wax Seal glowing bloom — pulses then breaks
+    // 1. Seal blooms — pulses outward then shrinks + fades as flap opens
     tl.to(waxSeal, {
-      scale: 1.25,
-      duration: 0.3,
+      scale: 1.3,
+      duration: 0.28,
       ease: 'power2.out'
     }, startDelay);
 
+    // After bloom: seal shrinks and fades away cleanly (single tween, no conflict)
     tl.to(waxSeal, {
-      scale: 0.85,
-      duration: 0.15,
-      ease: 'power2.in'
-    }, startDelay + 0.3);
+      scale: 0.3,
+      opacity: 0,
+      duration: 0.38,
+      ease: 'power3.in'
+    }, startDelay + 0.28);
 
-    // 2. Flap triangle peels open: apex retracts from 65.5% toward top edge (0%)
+    // 2. Flap peels open: apex retracts from 65.5% → 0%
     gsap.set(envelopeFlap, { clipPath: 'polygon(0% 0%, 100% 0%, 50% 65.5%)' });
     tl.to(envelopeFlap, {
       clipPath: 'polygon(0% 0%, 100% 0%, 50% 0%)',
       duration: 0.85,
       ease: 'power2.inOut'
-    }, startDelay + 0.3);
-
-    // Seal fades out as flap peels away (after bloom settles)
-    tl.to(waxSeal, {
-      opacity: 0,
-      scale: 0.5,
-      duration: 0.35,
-      ease: 'power3.in'
-    }, startDelay + 0.3);
+    }, startDelay + 0.28);
 
     // 3. Card emerges out of the envelope pocket and expands continuously into full screen!
     tl.to(lightboxCardWrapper, {

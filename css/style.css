@@ -443,11 +443,13 @@ html, body {
   left: 50%;
   width: var(--seal-size);
   height: var(--seal-size);
-  transform: translate(-50%, -50%);
+  /* Use margins for centering — NOT transform, so GSAP can animate transform freely */
+  margin-left: calc(var(--seal-size) / -2);
+  margin-top: calc(var(--seal-size) / -2);
   z-index: 10;
   cursor: pointer;
   pointer-events: auto;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+  /* No CSS transition — GSAP controls all animation */
 }
 
 .wax-seal-body {
