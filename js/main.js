@@ -216,35 +216,37 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // 1. Wax Seal glowing bloom & release
+    // Reset seal state (in case it's stale from a previous open)
+    gsap.set(waxSeal, { opacity: 1, scale: 1.0, rotation: 0 });
+
+    // 1. Wax Seal glowing bloom — pulses then breaks
     tl.to(waxSeal, {
-      scale: 1.2,
-      duration: 0.35,
+      scale: 1.25,
+      duration: 0.3,
       ease: 'power2.out'
     }, startDelay);
 
     tl.to(waxSeal, {
-      scale: 1.0,
-      duration: 0.25,
-      ease: 'power1.out'
-    }, startDelay + 0.35);
+      scale: 0.85,
+      duration: 0.15,
+      ease: 'power2.in'
+    }, startDelay + 0.3);
 
     // 2. Flap triangle peels open: apex retracts from 65.5% toward top edge (0%)
-    // Pure clip-path animation — no 3D rotation, no coordinate system issues
     gsap.set(envelopeFlap, { clipPath: 'polygon(0% 0%, 100% 0%, 50% 65.5%)' });
     tl.to(envelopeFlap, {
       clipPath: 'polygon(0% 0%, 100% 0%, 50% 0%)',
-      duration: 0.9,
+      duration: 0.85,
       ease: 'power2.inOut'
-    }, startDelay + 0.25);
+    }, startDelay + 0.3);
 
-    // Wax seal fades out as flap peels open
+    // Seal fades out as flap peels away (after bloom settles)
     tl.to(waxSeal, {
       opacity: 0,
-      scale: 0.7,
-      duration: 0.3,
-      ease: 'power2.in'
-    }, startDelay + 0.35);
+      scale: 0.5,
+      duration: 0.35,
+      ease: 'power3.in'
+    }, startDelay + 0.3);
 
     // 3. Card emerges out of the envelope pocket and expands continuously into full screen!
     // Waits until flap has swung past vertical (-115deg) so pocket opening is clearly revealed!
@@ -363,21 +365,23 @@ window.addEventListener('DOMContentLoaded', () => {
       ease: 'power2.inOut'
     }, 0.65);
 
-    // Wax seal reappears as flap closes
-    tl.to(waxSeal, {
+    // Wax seal reappears only after flap is fully closed (flap done at t=1.5s)
+    tl.fromTo(waxSeal, {
+      opacity: 0,
+      scale: 0.4
+    }, {
       opacity: 1,
       scale: 1.15,
-      duration: 0.25,
-      ease: 'power2.out'
-    }, 1.35);
+      duration: 0.3,
+      ease: 'back.out(2)'
+    }, 1.52);
 
-    // 3. Ganesha wax seal snaps into place as flap lands shut
+    // Seal settles to normal size
     tl.to(waxSeal, {
       scale: 1.0,
-      rotation: 0,
-      duration: 0.32,
-      ease: 'back.out(2)'
-    }, 1.6);
+      duration: 0.2,
+      ease: 'power2.out'
+    }, 1.82);
 
     // 4. Smoothly turn envelope back to front face once sealed
     tl.to(envelope3dBox, {
